@@ -1,8 +1,159 @@
 # Run it
-A Node.js module to ease error handling and let you get rid of if(err)cb(err)
+A Node.js module to ease error handling and let you get rid of if(err) return cb(err)
 
 ## Install
 `npm install run-it --save`
 
-## Usage
-**WIP**
+## Current state
+THIS IS A DRAFT
+
+## Motivation
+Node.js is great, but after writing `if(err) return cb(err)` a million times one may get tired.
+A good solution is to use the core [domain](http://nodejs.org/api/domain.html) module. This module builds on top of that to provide a clean interface and some strong guarantees about error handling:
+
+* execute a function and get all thrown execptions, including asynchronous ones
+* call async routines without having to check about the first `err` parameter
+* write error messages with placeholders, like: `Sorry, user %s does not exist`
+* no more `return` pitfall: `cb(new Error('Something went wrong, but as I have forgot to return, my code will continue after this...'))`
+* support for asynchronous functions that run before the target function
+* support to profile async calls
+
+## Basic Usage
+```js
+var run = require('run-it')(),
+	fs = require('fs')
+
+// Read the file as JSON and return the data in the `name` field
+function getName(file, success, error) {
+	// error(fn) will take care of the error parameter for you
+	fs.readFile(file, error(function (data) {
+		data = new Buffer(data, 'utf8')
+		if (!data.length) {
+			// No need to use return here, error(str,...) will throw
+			error('File %s is empty', file)
+		}
+		// No try{...}catch{...} over here
+		data = JSON.parse(data)
+		// Note that success *WILL NOT* throw, so code can continue after success
+		success(data.name)
+	})
+}
+
+run(getName, 'README.md', function (err, name) {
+	// here we're back to normal nodejs behaviour
+})
+```
+
+## What is this for?
+This module was created as a solution to isolate errors for each endpoint in a WebService. This way, if one request fails, that request (only) is answered with error, the error is properly logged and the API stays up and running.
+
+This module was not created to let you ignore errors nor simply turn uncaught exceptions into error values with no consequences. Think deeply about your use case before using this as a general solution.
+
+It's a common advise (and a reasonable one) to restart the whole application after an uncaught exception, since the application may have entered a corrupted state. In the use case described above (endpoints in a WS), if all endpoints are stateless and isolated, them restarting is no longer needed and this solution fits well.
+
+## Filters
+To run other async functions before the final one, like some auth routine to exchange a login token for user data, pass an array of function as first argument:
+
+```js
+function auth(body, success, error) {
+	findUserByToken(body.token, error(function (user) {
+		user ? success(user) : error('Invalid token')
+	}))
+}
+
+function changeName(body, user, success, error) {
+	user.name = body.newName
+	user.save(error(function () {
+		success()
+	}))
+}
+
+var body = {
+	token: '1234',
+	newName: 'CdE'
+}
+
+run([auth, changeName], body, function (err, data) {
+	// ...
+})
+```
+
+If more than one filter is given, all them will be called with the same arguments and be executed in series. The output values of each will be concatenated and sent to the target function.
+
+## Profiling
+If you enable profiling, each call to `error(fn)` will be traced. The `begin` time is when the `error` function was executed. The `end` is when the `fn` function was executed, ie when the async operation has finished. `time` is `end - begin`.
+
+```js
+// Enabling globally
+run.profile = true
+
+// On demand
+run(fn).profile(/*true*/).exec(data, function (err, data, profile) {
+	// profile is an array of objects like:
+	// {file: string, line: number, begin: number, end: number, time: number}
+})
+```
+
+## Error class
+By default, errors created by `error(str,...)` will be instantiated from `Error`. But sometimes it's useful to tell errors created this way apart from other errors, like the ones created by `fs.readFile`. To do that:
+
+```js
+// Global setting
+run.errorClass = MyError
+
+// On demand
+run(fn).errorClass(MyError).exec(data, function (err, data) {
+	if (err instanceof MyError) {
+		// it was created by error(str,...)
+	}
+})
+```
+
+## Error codes
+One common pattern for errors is to use a code to identify them. Enabling this options, `error(str,...)` must be used as `error(code,str,...)`. This is a global option:
+
+```js
+run.enableErrorCode = true
+run(function (data, success, error) {
+	error(100, 'O.o')
+}, data, function (err, data) {
+	// ...
+})
+```
+
+## Error function
+The `error` function has a set of different uses. They're summarized here:
+
+* `error(fn)`: wrap the given function and return a node-style error-first callback. Works like [domain.intercept](http://nodejs.org/api/domain.html#domain_domain_intercept_callback). If profiling is enabled, these calls are used to probe code execution
+* `error(str,...x)`: throw an error (by default, instanceof Error) with the given message. The message may have placeholders. See [util.format](http://nodejs.org/api/util.html#util_util_format_format) for more on this. The message is required.
+* `error(code,str,...x)`: if error code is enabled, throw an error (by default, instanceof Error) with the given message and add the given code as `code` property in the error object. The message is required.
+* `error(x)`: error out with the given value (it should be an Error instance, but not necessarily)
+* `error.orOut(...x)`: same as `error(function () {success(...x)})`
+* `error.orOutput()`: same as `error(function (...args) {success(...args)})`
+* `error.orOutput(n)`: same as `error(function (...args) {success(...args.slice(0, n))})`
+
+## Multiple arguments
+All examples above were presented with only one argument being returned/received, since this is most common practice. But multiple arguments are supported as well:
+```js
+// Two filters, three input values, two expected output values
+run([filter1, filter2, fn], in1, in2, in3, function (err, out1, out2) {
+	
+})
+
+// All filters are called with the same arguments
+function filter1(in1, in2, in3, success, error) {
+	// Two output values from this filter
+	success(f1A, f1B)
+}
+
+function filter2(in1, in2, in3, success, error) {
+	// No output from this one
+	success()
+}
+
+// Three initial arguments + two from the first filter + zero from the second
+function fn(in1, in2, in3, f1A, f1B, success, error) {
+	// Two outputs
+	success(out1, out2)
+}
+```
