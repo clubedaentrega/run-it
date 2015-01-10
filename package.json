@@ -1,0 +1,24 @@
+{
+	"name": "run-it",
+	"version": "0.0.0",
+	"author": "Sitegui <sitegui@sitegui.com.br>",
+	"description": "A Node.js module to ease error handling and let you get rid of if(err)cb(err)",
+	"main": "./index.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/clubedaentrega/run-it"
+	},
+	"keywords": [],
+	"dependencies": {},
+	"license": "MIT",
+	"engines": {
+		"node": ">=0.10"
+	},
+	"scripts": {
+		"test": "mocha test"
+	},
+	"devDependencies": {
+		"mocha": "^2.1.0",
+		"should": "^4.4.4"
+	}
+}
