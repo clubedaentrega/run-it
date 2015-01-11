@@ -6,22 +6,6 @@ var run = require('../')(),
 	domain = require('domain')
 
 describe('basic usage', function () {
-	/*run(function (file, success, error) {
-			// error(fn) will take care of the error parameter for you
-			fs.readFile(file, error(function (data) {
-				data = new Buffer(data, 'utf8')
-				if (!data.length) {
-					// No need to use return here, error(str,...) will throw
-					error('File %s is empty', file)
-				}
-				// No try{...}catch{...} over here
-				data = JSON.parse(data)
-				// Note that success *WILL NOT* throw, so code can continue after success
-				success(data.name)
-			}))
-		}, 'README.md', function (err, name) {
-
-		})*/
 
 	it('should execute the target function in a domain', function (done) {
 		domain._stack.should.have.length(0)
