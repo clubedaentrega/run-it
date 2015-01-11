@@ -36,7 +36,7 @@ function getName(file, success, error) {
 		data = JSON.parse(data)
 		// Note that success *WILL NOT* throw, so code can continue after success
 		success(data.name)
-	})
+	}))
 }
 
 run(getName, 'README.md', function (err, name) {
@@ -55,17 +55,21 @@ It's a common advise (and a reasonable one) to restart the whole application aft
 To run other async functions before the final one, like some auth routine to exchange a login token for user data, pass an array of function as first argument:
 
 ```js
+// An async operation example (load user from database)
 function auth(body, success, error) {
 	findUserByToken(body.token, error(function (user) {
 		user ? success(user) : error('Invalid token')
 	}))
 }
 
+// Target function. `user` is the output from the auth filter
 function changeName(body, user, success, error) {
 	user.name = body.newName
 	user.save(error(function () {
 		success()
 	}))
+	// Another way of coding the above is:
+	// user.save(error.orOut())
 }
 
 var body = {
@@ -73,6 +77,7 @@ var body = {
 	newName: 'CdE'
 }
 
+// The target function is the last element of array
 run([auth, changeName], body, function (err, data) {
 	// ...
 })
@@ -110,7 +115,7 @@ run(fn).errorClass(MyError).exec(data, function (err, data) {
 ```
 
 ## Error codes
-One common pattern for errors is to use a code to identify them. Enabling this options, `error(str,...)` must be used as `error(code,str,...)`. This is a global option:
+One common pattern for errors is to use a code to identify them. Enabling this option, `error(code,str,...)` must be used instead of `error(str,...)`. This is a global option:
 
 ```js
 run.enableErrorCode = true
@@ -137,7 +142,7 @@ All examples above were presented with only one argument being returned/received
 ```js
 // Two filters, three input values, two expected output values
 run([filter1, filter2, fn], in1, in2, in3, function (err, out1, out2) {
-	
+	// ...
 })
 
 // All filters are called with the same arguments
