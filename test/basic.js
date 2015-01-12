@@ -16,6 +16,19 @@ describe('basic usage', function () {
 			domain._stack.should.have.length(0)
 			done()
 		})
+		domain._stack.should.have.length(0)
+	})
+	it('should preserve active domain in the final callback', function (done) {
+		var d = domain.create()
+		d.run(function () {
+			var active = process.domain
+			run(function (success) {
+				success()
+			}, function () {
+				process.domain.should.be.equal(active)
+				done()
+			})
+		})
 	})
 
 	it('should pass input values to target function', function (done) {
