@@ -4,9 +4,6 @@ A Node.js module to ease error handling and let you get rid of if(err) return cb
 ## Install
 `npm install run-it --save`
 
-## Current state
-THIS IS A DRAFT
-
 ## Motivation
 Node.js is great, but after writing `if(err) return cb(err)` a million times one may get tired.
 A good solution is to use the core [domain](http://nodejs.org/api/domain.html) module. This module builds on top of that to provide a clean interface and some strong guarantees about error handling:

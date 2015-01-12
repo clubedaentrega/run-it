@@ -18,6 +18,7 @@ describe('basic usage', function () {
 		})
 		domain._stack.should.have.length(0)
 	})
+	
 	it('should preserve active domain in the final callback', function (done) {
 		var d = domain.create()
 		d.run(function () {
@@ -89,7 +90,7 @@ describe('basic usage', function () {
 			setTimeout(error(function (value) {
 				value.should.be.equal('value')
 
-				// Mimic a async error
+				// Mimic an async error
 				setTimeout(error(function () {
 					done(new Error('Should not get here'))
 				}), 10, new Error('Async error'))
