@@ -6,7 +6,6 @@ var run = require('../')(),
 	domain = require('domain')
 
 describe('basic usage', function () {
-
 	it('should execute the target function in a domain', function (done) {
 		domain._stack.should.have.length(0)
 		run(function (success) {
@@ -114,6 +113,56 @@ describe('basic usage', function () {
 		}, function (err) {
 			err.message.should.be.equal('My error')
 			done()
+		})
+	})
+
+	it('should accept error.orOut', function (done) {
+		run(function (success, error) {
+			// Success
+			setTimeout(error.orOut('A1', 'A2'), 10, null)
+		}, function (err, out1, out2) {
+			should(err).be.null
+			out1.should.be.equal('A1')
+			out2.should.be.equal('A2')
+
+			run(function (success, error) {
+				// Error
+				setTimeout(error.orOut('B1', 'B2'), 10, new Error('ER'))
+			}, function (err, out1, out2) {
+				err.message.should.be.equal('ER')
+				should(out1).be.equal(undefined)
+				should(out2).be.equal(undefined)
+				done()
+			})
+		})
+	})
+
+	it('should accept error.orOutput', function (done) {
+		run(function (success, error) {
+			// Success
+			setTimeout(error.orOutput(), 10, null, 'A1', 'A2')
+		}, function (err, out1, out2) {
+			should(err).be.null
+			out1.should.be.equal('A1')
+			out2.should.be.equal('A2')
+
+			run(function (success, error) {
+				// Success (trim)
+				setTimeout(error.orOutput(1), 10, null, 'B1', 'B2')
+			}, function (err, out1, out2) {
+				should(err).be.null
+				out1.should.be.equal('B1')
+				should(out2).be.equal(undefined)
+
+				run(function (success, error) {
+					// Error
+					setTimeout(error.orOutput(), 10, new Error('ER'))
+				}, function (err, out1) {
+					err.message.should.be.equal('ER')
+					should(out1).be.equal(undefined)
+					done()
+				})
+			})
 		})
 	})
 })
