@@ -91,9 +91,18 @@ run.profile = true
 
 // On demand
 run(fn).profile(/*true*/).exec(data, function (err, data, profile) {
-	// profile is an array of objects like:
+	// `profile` is an array with at most one element for each
+	// function (each filter + the target function). Each element is
+	// an object like:
+	// {step: number, begin: number, end: number, time: number, times: [Time]}
+	// Each element of `times` is an object that represents each `error(fn)` call site:
 	// {file: string, line: number, begin: number, end: number, time: number}
+	// `begin`, `end` and `time` are all in ms
 })
+
+// Set base path for the `file` key (passed to `path.relative(from, to)`)
+run.basePath = __dirname
+// or on demand `run(fn).profile(__dirname)`
 ```
 
 ## Error class

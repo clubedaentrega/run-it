@@ -19,12 +19,15 @@ module.exports = function () {
 		var len = arguments.length
 		if (len === 1) {
 			// run(fn)
-			return new Bind(fns, run.profile, run.errorClass, run.enableErrorCode)
+			return new Bind(fns, run)
 		}
 
-		var bind = new Bind(fns, run.profile, run.errorClass, run.enableErrorCode)
+		var bind = new Bind(fns, run)
 		bind.exec.apply(bind, [].slice.call(arguments, 1))
 	}
+	
+	/** @member {string} */
+	run.basePath = ''
 
 	/** @member {boolean} */
 	run.profile = false
