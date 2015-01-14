@@ -1,6 +1,6 @@
 {
 	"name": "run-it",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"author": "Sitegui <sitegui@sitegui.com.br>",
 	"description": "A Node.js module to ease error handling and let you get rid of if(err) return cb(err)",
 	"main": "./index.js",
