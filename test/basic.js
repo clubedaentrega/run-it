@@ -18,7 +18,7 @@ describe('basic usage', function () {
 		})
 		domain._stack.should.have.length(0)
 	})
-	
+
 	it('should preserve active domain in the final callback', function (done) {
 		var d = domain.create()
 		d.run(function () {

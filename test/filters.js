@@ -61,6 +61,24 @@ describe('filters', function () {
 			})
 		})
 	})
+	
+	it('should only accept output once from each filter', function (done) {
+		function filter(success) {
+			success(1)
+			success(2)
+		}
+		
+		function fn(n, success) {
+			arguments.should.have.length(3)
+			success(3)
+		}
+		
+		run([filter, fn], function (err, n) {
+			should(err).be.null
+			n.should.be.equal(3)
+			done()
+		})
+	})
 
 	it('should store all filter output and call the final callback with them', function (done) {
 		// Two filters, three input values, two expected output values
