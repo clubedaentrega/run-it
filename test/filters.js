@@ -27,6 +27,7 @@ describe('filters', function () {
 			success()
 		}
 		run([f1, f2, fn], function (err) {
+			should(err).be.null
 			order.should.be.equal(3)
 			order = 4
 			done(err)
@@ -57,25 +58,44 @@ describe('filters', function () {
 			}
 			run([f1, f2, fn], function (err) {
 				process.domain.should.be.equal(d)
+				d.exit()
 				done(err)
 			})
 		})
 	})
-	
+
 	it('should only accept output once from each filter', function (done) {
 		function filter(success) {
 			success(1)
 			success(2)
 		}
-		
+
 		function fn(n, success) {
 			arguments.should.have.length(3)
 			success(3)
 		}
-		
+
 		run([filter, fn], function (err, n) {
 			should(err).be.null
 			n.should.be.equal(3)
+			done()
+		})
+	})
+
+	it('should not accept an error after success is called', function (done) {
+		function filter(success, error) {
+			success('filter')
+			error('hi')
+		}
+
+		function fn(str, success) {
+			str.should.be.equal('filter')
+			success('fn')
+		}
+
+		run([filter, fn], function (err, str) {
+			should(err).be.null
+			str.should.be.equal('fn')
 			done()
 		})
 	})

@@ -22,11 +22,11 @@ describe('basic usage', function () {
 	it('should preserve active domain in the final callback', function (done) {
 		var d = domain.create()
 		d.run(function () {
-			var active = process.domain
 			run(function (success) {
 				success()
 			}, function () {
-				process.domain.should.be.equal(active)
+				process.domain.should.be.equal(d)
+				d.exit()
 				done()
 			})
 		})
