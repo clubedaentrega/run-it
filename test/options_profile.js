@@ -53,11 +53,13 @@ describe('options: profile', function () {
 		run([filter, fn]).profile().exec(function (err, profile) {
 			profile.should.be.an.Array.and.have.length(2)
 			profile[0].step.should.be.equal(0)
+			profile[0].type.should.be.equal('filter')
 			profile[0].begin.should.a.Number
 			profile[0].end.should.a.Number
 			profile[0].time.should.a.Number
 			profile[0].times.should.an.Array.and.have.length(2)
 			profile[1].times.should.an.Array.and.have.length(1)
+			profile[1].type.should.be.equal('target')
 			done()
 		})
 	})

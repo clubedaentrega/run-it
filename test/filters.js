@@ -26,12 +26,29 @@ describe('filters', function () {
 			order = 3
 			success()
 		}
-		run([f1, f2, fn], function (err) {
+
+		run([[f1, f2], fn], function (err) {
 			should(err).be.null
 			order.should.be.equal(3)
 			order = 4
 			done(err)
 		})
+	})
+
+	it('should accept old spread syntax', function (done) {
+		function f1(success) {
+			success()
+		}
+
+		function f2(success) {
+			success()
+		}
+
+		function fn(success) {
+			success()
+		}
+
+		run([f1, f2, fn], done)
 	})
 
 	it('should execute each filter in a different domain', function (done) {
@@ -56,7 +73,7 @@ describe('filters', function () {
 				dn.should.not.be.equal(d2)
 				success()
 			}
-			run([f1, f2, fn], function (err) {
+			run([[f1, f2], fn], function (err) {
 				process.domain.should.be.equal(d)
 				d.exit()
 				done(err)
@@ -75,7 +92,7 @@ describe('filters', function () {
 			success(3)
 		}
 
-		run([filter, fn], function (err, n) {
+		run([[filter], fn], function (err, n) {
 			should(err).be.null
 			n.should.be.equal(3)
 			done()
@@ -93,7 +110,7 @@ describe('filters', function () {
 			success('fn')
 		}
 
-		run([filter, fn], function (err, str) {
+		run([[filter], fn], function (err, str) {
 			should(err).be.null
 			str.should.be.equal('fn')
 			done()
@@ -102,7 +119,7 @@ describe('filters', function () {
 
 	it('should store all filter output and call the final callback with them', function (done) {
 		// Two filters, three input values, two expected output values
-		run([filter1, filter2, filter3, fn], 'in1', 'in2', 'in3', function (err, out1, out2) {
+		run([[filter1, filter2, filter3], fn], 'in1', 'in2', 'in3', function (err, out1, out2) {
 			should(err).be.null
 			out1.should.be.equal('out1')
 			out2.should.be.equal('out2')
