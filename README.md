@@ -74,13 +74,58 @@ var body = {
 	newName: 'CdE'
 }
 
-// The target function is the last element of array
+// The target function is the second element in the array
+// The first element is an array of filters
+run([[auth], changeName], body, function (err, data) {
+	// ...
+})
+
+// Another way is to list all functions in a flat array
+// The target function is the last element of the array
 run([auth, changeName], body, function (err, data) {
 	// ...
 })
 ```
 
 If more than one filter is given, all them will be called with the same arguments and be executed in series. The output values of each will be concatenated and sent to the target function.
+
+## Post filters
+To run other async functions after the target, like some output checking routine, pass an array after the target function:
+
+```js
+// Target function
+function add(body, success, error) {
+	success(body.a + body.b)
+}
+
+// Post processing: output sanity
+function check(response, success, error) {
+	if (typeof response !== 'number') {
+		throw new Error('Uhm, not a number...')
+	}
+	// Post filters can change completely the output
+	// To let it unchanged, you must call success with it
+	success(response)
+}
+
+var body = {
+	a: 3,
+	b: '14'
+}
+
+// The target function is the first element in the array
+// The second element is an array of post filters
+run([add, [check]], body, function (err, sum) {
+	// ...
+})
+```
+
+If more than one post filter is given, they will be executed sequentially. The output of the previous will be the input for the next (waterfall). The output of the last one is the final output.
+
+The syntax to use both filters and post filters is
+```js
+run([[filter1, filter2], target, [postFilter1, postFilter2]], body, callback)
+```
 
 ## Profiling
 If you enable profiling, each call to `error(fn)` will be traced. The `begin` time is when the `error` function was executed. The `end` is when the `fn` function was executed, ie when the async operation has finished. `time` is `end - begin`.
