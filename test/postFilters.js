@@ -51,4 +51,27 @@ describe('post filters', function () {
 			done()
 		})
 	})
+
+	it('should work for the README example', function (done) {
+		function add(body, success) {
+			success(body.a + body.b)
+		}
+
+		function check(response, success) {
+			if (typeof response !== 'number') {
+				throw new Error('Uhm, not a number...')
+			}
+			success(response)
+		}
+
+		var body = {
+			a: 3,
+			b: '14'
+		}
+
+		run([add, [check]], body, function (err) {
+			err.message.should.be.equal('Uhm, not a number...')
+			done()
+		})
+	})
 })
