@@ -1,6 +1,6 @@
 'use strict'
 
-var Bind = require('./lib/Bind')
+var Runner = require('./lib/Runner')
 
 /**
  * @returns {Function}
@@ -8,12 +8,12 @@ var Bind = require('./lib/Bind')
 module.exports = function () {
 	/**
 	 * Two uses:
-	 * * run(fns) -> Bind
+	 * * run(fns) -> Runner
 	 * * run(fns, data, done)
 	 * @param {Function|Array<Function>} fns
 	 * @param {...*} [data]
 	 * @param {Function} [done]
-	 * @returns {?Bind}
+	 * @returns {?Runner}
 	 */
 	var run = function (fns) {
 		var isArr = Array.isArray,
@@ -52,13 +52,13 @@ module.exports = function () {
 		}
 
 		var len = arguments.length,
-			bind = new Bind(preFns, targetFn, postFns, run)
+			runner = new Runner(preFns, targetFn, postFns, run)
 		if (len === 1) {
 			// run(fns)
-			return bind
+			return runner
 		}
 
-		bind.exec.apply(bind, [].slice.call(arguments, 1))
+		runner.exec.apply(runner, [].slice.call(arguments, 1))
 	}
 
 	/** @member {string} */

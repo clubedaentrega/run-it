@@ -189,6 +189,23 @@ The `error` function has a set of different uses. They're summarized here:
 * `error.orOutput()`: same as `error(function (...args) {success(...args)})`
 * `error.orOutput(n)`: same as `error(function (...args) {success(...args.slice(0, n))})`
 
+## Domains and execution data
+Every function is executed in its own [domain](https://nodejs.org/api/domain.html). Those domains may share some run state:
+```js
+var someState = []
+function fn(success, error) {
+	assert(process.domain.runInfo === someState)
+	setTimeout(function () {
+		assert(process.domain.runInfo === someState)
+		someState.push('hi')
+		success()
+	}, 1e3)
+}
+run([fn, fn]).runInfo(someState).exec(function (err) {
+	assert(someState.length === 2)
+})
+```
+
 ## Multiple arguments
 All examples above were presented with only one argument being returned/received, since this is most common practice. But multiple arguments are supported as well:
 ```js
