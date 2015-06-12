@@ -54,8 +54,8 @@ describe('options: profile', function () {
 			profile.should.be.an.Array.and.have.length(2)
 			profile[0].step.should.be.equal(0)
 			profile[0].type.should.be.equal('filter')
-			profile[0].begin.should.a.Number
-			profile[0].end.should.a.Number
+			profile[0].begin.should.an.instanceof(Date)
+			profile[0].end.should.an.instanceof(Date)
 			profile[0].time.should.a.Number
 			profile[0].times.should.an.Array.and.have.length(2)
 			profile[1].times.should.an.Array.and.have.length(1)
