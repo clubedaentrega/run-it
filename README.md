@@ -128,7 +128,7 @@ run([[filter1, filter2], target, [postFilter1, postFilter2]], body, callback)
 ```
 
 ## Profiling
-If you enable profiling, each call to `error(fn)` will be traced. The `begin` time is when the `error` function was executed. The `end` is when the `fn` function was executed, ie when the async operation has finished. `time` is `end - begin`.
+If you enable profiling, each call to `error(fn)` will be traced. The `begin` Date is when the `error` function was executed. The `end` is when the `fn` function was executed, ie when the async operation has finished. `time` is `end - begin`.
 
 ```js
 // Enabling globally
@@ -139,10 +139,10 @@ run(fn).profile(/*true*/).exec(data, function (err, data, profile) {
 	// `profile` is an array with at most one element for each
 	// function (each filter + the target function). Each element is
 	// an object like:
-	// {step: number, type: string, begin: number, end: number, time: number, times: [Time]}
+	// {step: number, type: string, begin: Date, end: Date, time: number, times: [Time]}
 	// `type` is one of 'filter', 'target', 'post filter'
 	// Each element of `times` is an object that represents each `error(fn)` call site:
-	// {file: string, line: number, begin: number, end: number, time: number}
+	// {file: string, line: number, begin: Date, end: Date, time: number}
 	// `begin`, `end` and `time` are all in ms
 })
 
