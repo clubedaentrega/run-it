@@ -27,7 +27,7 @@ describe('post filters', function () {
 		}
 
 		run([fn, [pf1, pf2]], function (err) {
-			should(err).be.null
+			should(err).be.null()
 			order.should.be.equal(3)
 			order = 4
 			done(err)
@@ -45,7 +45,7 @@ describe('post filters', function () {
 		}
 
 		run([fn, [postFilter]], function (err, n1, n2) {
-			should(err).be.null
+			should(err).be.null()
 			n1.should.be.equal(24)
 			n2.should.be.equal(17)
 			done()

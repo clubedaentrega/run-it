@@ -21,7 +21,7 @@ describe('options: info', function () {
 		}
 
 		run([[f, f], f, [f, f]]).runInfo(obj).exec(function (err) {
-			should(err).be.null
+			should(err).be.null()
 			obj.arr.should.be.eql([0, 1, 2, 3, 4])
 			done()
 		})

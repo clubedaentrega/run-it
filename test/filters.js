@@ -28,7 +28,7 @@ describe('filters', function () {
 		}
 
 		run([[f1, f2], fn], function (err) {
-			should(err).be.null
+			should(err).be.null()
 			order.should.be.equal(3)
 			order = 4
 			done(err)
@@ -93,7 +93,7 @@ describe('filters', function () {
 		}
 
 		run([[filter], fn], function (err, n) {
-			should(err).be.null
+			should(err).be.null()
 			n.should.be.equal(3)
 			done()
 		})
@@ -111,7 +111,7 @@ describe('filters', function () {
 		}
 
 		run([[filter], fn], function (err, str) {
-			should(err).be.null
+			should(err).be.null()
 			str.should.be.equal('fn')
 			done()
 		})
@@ -120,7 +120,7 @@ describe('filters', function () {
 	it('should store all filter output and call the final callback with them', function (done) {
 		// Two filters, three input values, two expected output values
 		run([[filter1, filter2, filter3], fn], 'in1', 'in2', 'in3', function (err, out1, out2) {
-			should(err).be.null
+			should(err).be.null()
 			out1.should.be.equal('out1')
 			out2.should.be.equal('out2')
 			done()

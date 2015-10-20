@@ -6,7 +6,7 @@ require('should')
 
 describe('options: enableErrorCode', function () {
 	it('should be disabled by default', function (done) {
-		run.enableErrorCode.should.be.false
+		run.enableErrorCode.should.be.false()
 		run(function (success, error) {
 			error('hi')
 		}, function (err) {

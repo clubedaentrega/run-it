@@ -12,7 +12,7 @@ describe('basic usage', function () {
 			domain._stack.should.have.length(1)
 			success()
 		}, function (err) {
-			should(err).be.null
+			should(err).be.null()
 			domain._stack.should.have.length(0)
 			done()
 		})
@@ -45,7 +45,7 @@ describe('basic usage', function () {
 		run(function (success) {
 			success('out1', 'out2', 'out3')
 		}, function (err, out1, out2, out3) {
-			should(err).be.null
+			should(err).be.null()
 			out1.should.equal('out1')
 			out2.should.equal('out2')
 			out3.should.equal('out3')
@@ -57,7 +57,7 @@ describe('basic usage', function () {
 		run(function () {
 			throw new Error('Test error')
 		}, function (err) {
-			err.should.be.an.Error.and.have.property('message').equal('Test error')
+			err.should.be.an.Error().and.have.property('message').equal('Test error')
 			done()
 		})
 	})
@@ -68,7 +68,7 @@ describe('basic usage', function () {
 				throw new Error('Test error')
 			}, 10)
 		}, function (err) {
-			err.should.be.an.Error.and.have.property('message').equal('Test error')
+			err.should.be.an.Error().and.have.property('message').equal('Test error')
 			done()
 		})
 	})
@@ -135,7 +135,7 @@ describe('basic usage', function () {
 			// Success
 			setTimeout(error.orOut('A1', 'A2'), 10, null)
 		}, function (err, out1, out2) {
-			should(err).be.null
+			should(err).be.null()
 			out1.should.be.equal('A1')
 			out2.should.be.equal('A2')
 
@@ -156,7 +156,7 @@ describe('basic usage', function () {
 			// Success
 			setTimeout(error.orOutput(), 10, null, 'A1', 'A2')
 		}, function (err, out1, out2) {
-			should(err).be.null
+			should(err).be.null()
 			out1.should.be.equal('A1')
 			out2.should.be.equal('A2')
 
@@ -164,7 +164,7 @@ describe('basic usage', function () {
 				// Success (trim)
 				setTimeout(error.orOutput(1), 10, null, 'B1', 'B2')
 			}, function (err, out1, out2) {
-				should(err).be.null
+				should(err).be.null()
 				out1.should.be.equal('B1')
 				should(out2).be.equal(undefined)
 
