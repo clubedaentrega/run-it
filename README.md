@@ -1,4 +1,6 @@
 # Run it
+[![Build Status](https://travis-ci.org/clubedaentrega/run-it.svg?branch=master)](https://travis-ci.org/clubedaentrega/run-it)
+
 A Node.js module to ease error handling and let you get rid of if(err) return cb(err)
 
 ## Install
