@@ -1,5 +1,7 @@
 # Run it
 [![Build Status](https://travis-ci.org/clubedaentrega/run-it.svg?branch=master)](https://travis-ci.org/clubedaentrega/run-it)
+[![Inline docs](http://inch-ci.org/github/clubedaentrega/run-it.svg?branch=master)](http://inch-ci.org/github/clubedaentrega/run-it)
+[![Dependency Status](https://david-dm.org/clubedaentrega/run-it.svg)](https://david-dm.org/clubedaentrega/run-it)
 
 A Node.js module to ease error handling and let you get rid of if(err) return cb(err)
 
