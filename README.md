@@ -185,7 +185,8 @@ run(function (data, success, error) {
 ## Error function
 The `error` function has a set of different uses. They're summarized here:
 
-* `error(fn)`: wrap the given function and return a node-style error-first callback. Works like [domain.intercept](http://nodejs.org/api/domain.html#domain_domain_intercept_callback). If profiling is enabled, these calls are used to probe code execution
+* `error(fn)`: wrap the given function and return a node-style error-first callback. Works like [domain.intercept](https://nodejs.org/api/domain.html#domain_domain_intercept_callback). If profiling is enabled, these calls are used to probe code execution
+* `error.wrap(fn)`: wrap the given function to catch exceptions thrown by it. Works like [domain.bind](https://nodejs.org/api/domain.html#domain_domain_bind_callback). If profiling is enabled, these calls are used to probe code execution
 * `error(str,...x)`: throw an error (by default, instanceof Error) with the given message. The message may have placeholders. See [util.format](http://nodejs.org/api/util.html#util_util_format_format) for more on this. The message is required.
 * `error(code,str,...x)`: if error code is enabled, throw an error (by default, instanceof Error) with the given message and add the given code as `code` property in the error object. The message is required.
 * `error(x)`: error out with the given value (it should be an Error instance, but not necessarily)

@@ -62,7 +62,7 @@ describe('basic usage', function () {
 		})
 	})
 
-	it('should catch async execption', function (done) {
+	it('should catch async exception', function (done) {
 		run(function () {
 			setTimeout(function () {
 				throw new Error('Test error')
@@ -177,6 +177,27 @@ describe('basic usage', function () {
 					done()
 				})
 			})
+		})
+	})
+
+	it('should accept error.wrap', function (done) {
+		run(function (success, error) {
+			setTimeout(error.wrap(function (err, value) {
+				should(err).be.null()
+				value.should.be.equal('value')
+
+				// Mimic an async error
+				setTimeout(error.wrap(function (err) {
+					err.should.be.an.Error()
+					if (err) {
+						throw err
+					}
+					done(new Error('Should not get here'))
+				}), 10, new Error('Async error'))
+			}), 10, null, 'value')
+		}, function (err) {
+			err.message.should.be.equal('Async error')
+			done()
 		})
 	})
 })

@@ -1,3 +1,6 @@
+# 2.1.0
+* Added: `error.wrap(fn)`. It works much like `error(fn)`, but does not swallow the first argument. Use this around async calls you need the `err` argument.
+
 # 2.0.0
 * Changed: `begin` and `end` in profile data are instances of Dates (they were number)
 
