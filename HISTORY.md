@@ -1,3 +1,6 @@
+# 2.1.1
+* Fixed: make sure exceptions thrown directly inside `error()` and `error.wrap()` get correctly routed to Node.js
+
 # 2.1.0
 * Added: `error.wrap(fn)`. It works much like `error(fn)`, but does not swallow the first argument. Use this around async calls you need the `err` argument.
 

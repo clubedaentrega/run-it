@@ -200,4 +200,27 @@ describe('basic usage', function () {
 			done()
 		})
 	})
+
+	it('should route exceptions even when caller would swallow it', function (done) {
+		run(function (sucess, error) {
+			var callback = error(function () {
+				throw new Error('Do not ignore me')
+				sucess()
+			})
+
+			var correct = false
+			try {
+				callback()
+				correct = true
+			} catch (e) {
+				// Should not be executed
+				correct = false
+			}
+
+			correct.should.be.true()
+		}, function (err) {
+			err.message.should.be.equal('Do not ignore me')
+			done()
+		})
+	})
 })
