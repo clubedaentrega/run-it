@@ -111,11 +111,16 @@ describe('basic usage', function () {
 		})
 	})
 
-	it('should accept placeholders for error message', function (done) {
+	it('should accept extra object parameter', function (done) {
 		run(function (success, error) {
-			error('A string %s, number %d, json %j', 's', 12, [false], 'hi')
+			error('Message', {
+				a: 12,
+				b: 'text'
+			})
 		}, function (err) {
-			err.message.should.be.equal('A string s, number 12, json [false] hi')
+			err.message.should.be.equal('Message')
+			err.a.should.be.equal(12)
+			err.b.should.be.equal('text')
 			done()
 		})
 	})
