@@ -1,3 +1,12 @@
+# 3.0.0
+## Breaking changes
+* Changed: minimum support for node v4
+* Changed: `error()` functions no longer accept multiple arguments to format message
+* Changed: `error()` functions now accept an extra optional object parameter, used to copy properties to error instance.
+* Changed: `error(str, ...x)` to `error(str, ?obj)`
+* Changed: `error(code, str, ...x)` to `error(code, str, ?obj)`
+* Changed: `error(x)` to `error(x, ?obj)`
+
 # 2.1.1
 * Fixed: make sure exceptions thrown directly inside `error()` and `error.wrap()` get correctly routed to Node.js
 
