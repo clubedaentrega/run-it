@@ -155,6 +155,12 @@ run.basePath = __dirname
 // or on demand `run(fn).profile(__dirname)`
 ```
 
+## Success function
+The `success` function always return a JSON object, but you can change the default HTTP status code. They're summarized here:
+
+* `success(?obj)`: return the obj in JSON format as the payload with HTTP Status Code 200
+* `success(HTTPStatusCode, ?obj)`: the first parameter changes the default HTTP Status Code for the inserted
+
 ## Error class
 By default, errors created by `error(str,...)` will be instantiated from `Error`. But sometimes it's useful to tell errors created this way apart from other errors, like the ones created by `fs.readFile`. To do that:
 
@@ -189,6 +195,7 @@ The `error` function has a set of different uses. They're summarized here:
 * `error.wrap(fn)`: wrap the given function to catch exceptions thrown by it. Works like [domain.bind](https://nodejs.org/api/domain.html#domain_domain_bind_callback). If profiling is enabled, these calls are used to probe code execution
 * `error(str, ?obj)`: throw an error (by default, instanceof Error) with the given message and optionally copy properties from the object to it. The message is required.
 * `error(code, str, ?obj)`: if error code is enabled, throw an error (by default, instanceof Error) with the given message and add the given code as `code` property in the error object. The message is required.
+* `error(HTTPStatusCode, code, str, ?obj)`: same before, but you can also change the HTTP status code returned. Add it as the first parameter.
 * `error(x, ?obj)`: error out with the given value (it should be an Error instance, but not necessarily). Optionally, copy properties from the given object to it.
 * `error.orOut(...x)`: same as `error(function () {success(...x)})`
 * `error.orOutput()`: same as `error(function (...args) {success(...args)})`
